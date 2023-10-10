@@ -1,0 +1,1 @@
+/* watchlist.html loads and displays data from local storage */

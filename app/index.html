@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="stylesheet" href="index.css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;900&family=Poppins:wght@300;400;900&display=swap"
+      rel="stylesheet"
+    />
+    <!-- Fonts Awesome -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"
+      integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+    <title>Movies Watch List</title>
+  </head>
+  <body>
+    <div id="app" class="app">
+      <nav class="navbar">
+        <div class="navbar-wrapper">
+          <h1 class="title">Find your film</h1>
+          <a href="#"><h3 class="watchlist">My Watchlist</h3></a>
+        </div>
+      </nav>
+
+      <form>
+        <label for="search-bar" class="input-field">
+          <i class="fa fa-search"></i>
+          <input
+            type="text"
+            id="input-el"
+            placeholder="Enter movie title"
+          />
+          <button id="search-btn" class="search-btn" type="submit">
+            Search
+          </button>
+        </label>
+      </form>
+
+      <main>
+        <div id="search-results">
+          <div class="placeholder-text">
+            <i class="fa fa-film" aria-hidden="true"></i>
+            <h3>Start Exploring</h3>
+          </div>
+        </div>
+      </main>
+    </div>
+    <script type="module" src="/index.js"></script>
+  </body>
+</html>
