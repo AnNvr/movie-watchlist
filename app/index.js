@@ -1,78 +1,78 @@
-// OMDb API: https://www.omdbapi.com/?i=tt3896198&apikey=4fc3a442
-// Send data requests to: http://www.omdbapi.com/?apikey=4fc3a442&
-// Poster API requests: http://img.omdbapi.com/?apikey=4fc3a442&
-
-/* index.html = search page. 
-Calls to OMDB API with the title searched for and displays searched results */
-
-/* the icon add to watchlist saves data to local storage */
-
 const inputEl = document.getElementById("input-el");
 const searchBtn = document.getElementById("search-btn");
 const moviesContainer = document.getElementById("search-results");
-// Initialise myWatchlist from local storage or as an empty array
-let myWatchlist = JSON.parse(localStorage.getItem("movieObject")) ?? [];
-let searchData = null; /* used to store search results from the OMDb */
 
-const apiKey = "4fc3a442";
+let researchArr = []
 
-/* listen for click to the data attribute icon, take the object by its ID, push it into a watchlistArray */
+let storageKey = "movieObject"
 
-document.addEventListener("click", async (e) => {
-    if (e.target.classList.contains("fa-circle-plus")) {
-        const addIcon = e.target.dataset.add;
+const movieDetailsArr = {}
 
-        if (searchData && searchData.Response === "True") {
-            const movieObject = searchData.Search.find(movie => movie.imdbID === addIcon)
-    
-            if (movieObject) {
-                myWatchlist.push(movieObject)
-                localStorage.setItem("movieObject", JSON.stringify(myWatchlist));
-                e.target.style.color = "green";
-            }
-        }
+// Load existing watchlist from local storage or initialize as an empty array
+const myWatchlist = JSON.parse(localStorage.getItem(storageKey)) || [];
+
+searchBtn.addEventListener("click", (e) => {
+    const apiKey = "4fc3a442";
+    const searchKeyword = inputEl.value;
+    e.preventDefault();
+    fetch(`https://www.omdbapi.com/?apikey=${apiKey}&s=${searchKeyword}`)
+        .then(res => res.json())
+        .then(data => {
+            researchArr = data.Search; // array holding a collection of movies related to the keyword research    
+            
+            let movieListHtml = ""
+            
+            researchArr.forEach(movie => {
+                const movieID = movie.imdbID;
+                fetch(`https://www.omdbapi.com/?apikey=${apiKey}&i=${movieID}`)
+                    .then(res => res.json())
+                    .then(movie => {
+                        console.log(movie)
+                        movieDetailsArr[movieID] = movie
+                        /* In the researchArr.forEach(), the iteration receives the block of data for each movie and stores it in movieDetailsArr using the imdbID as the key. For example, if a movie has an imdbID of "tt12345", the code stores its detailed data under movieDetailsArr["tt12345"]. */
+                        /* console.log(movie) */
+                        movieListHtml += `
+                        <div class="movie-card">
+                            <img class="movie-poster" src="${movie.Poster !== 'N/A' ? movie.Poster : 'images/no_image_placeholder.png'}"">
+                            <section>
+                                <div class="film-set">
+                                    <h3 class="film-title">${movie.Title}</h3>
+                                    <span class="rating"><i class="fa-solid fa-star" style="color: #ffcb15;"></i>${movie.imdbRating}</span>
+                                </div>
+                                <div class="film-data">
+                                    <p>${movie.Runtime}</p>
+                                    <p>${movie.Genre}</p>
+                                    <span class="add-to-watchlist"><i class="fa-solid fa-circle-plus" data-add="${movie.imdbID}" style="color: #ffff;"></i>Watchlist</span>
+                                </div>
+                                <p class="plot">${movie.Plot}</p>
+                            </section>
+                        </div>
+                        `;
+
+                        moviesContainer.innerHTML = movieListHtml;                        
+                    })                                            
+            })
+        })
+})
+
+// - take one movie by ID listening for the "add icon" click
+// - store it into local Storage
+moviesContainer.addEventListener("click", (e) => {
+    if (e.target.dataset.add) {
+        const movieID = e.target.dataset.add;
+        handleAddClick(movieID);
     }
 })
 
-searchBtn.addEventListener("click", async () => {
-    try {
-        const response = await fetch(`https://www.omdbapi.com/?apikey=${apiKey}&s=${inputEl.value}`);
-        const data = await response.json();
 
-        if (data.Response === "True") {
-            searchData = data; // Assign the fetched data to searchData
-            let searchResult = data.Search;
-            let movieListHtml = "";
-
-            // Iterate over the searchResult array and fetch details for each movie by its imdbID
-            await Promise.all(searchResult.map(async (movie) => {
-                const movieResponse = await fetch(`https://www.omdbapi.com/?apikey=${apiKey}&i=${movie.imdbID}`)
-                const movieDetails = await movieResponse.json()
-
-            // Create a movie card for each movie
-            movieListHtml += `
-            <div class="movie-card">
-                <img src="${movieDetails.Poster}" width="auto">
-                <section>
-                    <div class="film-set">
-                        <h3>${movieDetails.Title}</h3>
-                        <span class="rating"><i class="fa-solid fa-star" style="color: #ffcb15;"></i>${movieDetails.imdbRating}</span>
-                    </div>
-                    <div class="film-data">
-                        <p>${movieDetails.Runtime}</p>
-                        <p>${movieDetails.Genre}</p>
-                        <span class="add-to-watchlist"><i class="fa-solid fa-circle-plus" data-add="${movieDetails.imdbID}" style="color: #000000;"></i>Watchlist</span>
-                    </div>
-                    <p class="plot">${movieDetails.Plot}</p>
-                </section>
-            </div>
-            `;
-
-            moviesContainer.innerHTML = movieListHtml;
-            }))
-        }
-    } catch (error) {
-        console.error("Error fetching data:", error);
-        moviesContainer.innerHTML = "<p>An error occurred while fetching data.</p>";
-    }                        
-})
+function handleAddClick(movieID){
+    const movie =movieDetailsArr[movieID]
+    /* console.log(movie) */
+    if (movie) {
+        // Add the new movie to the existing watchlist
+        myWatchlist.push(movie);
+        // Save the updated watchlist back to local storage
+        localStorage.setItem(storageKey, JSON.stringify(myWatchlist));
+        /* console.log(myWatchlist); */ // Log the updated watchlist
+    }
+}

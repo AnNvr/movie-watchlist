@@ -10,6 +10,10 @@ body {
   color: #faf9f6; 
 }
 
+main {
+  padding: 2em;
+}
+
 .app {
   margin: 0 auto;
   background-image: url(./images/background_image.png);
@@ -101,6 +105,79 @@ button:hover {
   font-size: 5em;
 }
 
-@media (min-width:576px) {
+/* List of results */
+.movie-card {
+  border-bottom: 2px solid #2C2C2C;
+}
 
+.movie-card,
+.film-set,
+.film-data {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.movie-poster {
+  width: 10.2rem;
+  height: 13.2rem;
+  border-radius: 3px;
+}
+
+.film-title {
+  font-size: 1.3rem;
+}
+
+.rating {
+  font-size: 0.75rem;
+}
+
+.film-set,
+.film-data {
+  align-items: center;
+}
+
+.film-set {
+  gap: 10px;
+}
+
+.fa-star {
+  margin-right: 10px;
+}
+
+.fa-circle-plus {
+  width: 1rem;
+  height: 1rem;
+}
+
+.film-data {
+  justify-content: space-evenly;
+}
+
+.plot {
+  color: #A5A5A5;
+  font-size: 0.875rem;
+  line-height: 1.25rem
+}
+
+
+
+
+
+@media (min-width:576px) {
+  .movie-card {
+    align-items: center;
+  }
+  section {
+    max-width: 22em;
+    padding: 1em;
+  }
+
+  .movie-poster {
+    width: 6.1875rem;
+    height: 9.21319rem;
+  }
+
+  .film-data {
+    font-size: 0.75rem;
+  }
 }
