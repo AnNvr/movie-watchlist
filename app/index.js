@@ -18,19 +18,19 @@ searchBtn.addEventListener("click", (e) => {
     fetch(`https://www.omdbapi.com/?apikey=${apiKey}&s=${searchKeyword}`)
         .then(res => res.json())
         .then(data => {
-            researchArr = data.Search; // array holding a collection of movies related to the keyword research    
-            
-            let movieListHtml = ""
-            
+            researchArr = data.Search; // array holding a collection of movies related to the keyword research           
+            let movieListHtml = ""       
             researchArr.forEach(movie => {
                 const movieID = movie.imdbID;
                 fetch(`https://www.omdbapi.com/?apikey=${apiKey}&i=${movieID}`)
                     .then(res => res.json())
                     .then(movie => {
-                        console.log(movie)
+
                         movieDetailsArr[movieID] = movie
-                        /* In the researchArr.forEach(), the iteration receives the block of data for each movie and stores it in movieDetailsArr using the imdbID as the key. For example, if a movie has an imdbID of "tt12345", the code stores its detailed data under movieDetailsArr["tt12345"]. */
-                        /* console.log(movie) */
+                        /* In the researchArr.forEach(), the iteration receives the block of data for each movie
+                        and stores it in movieDetailsArr using the imdbID as the key. 
+                        For example, if a movie has an imdbID of "tt12345",
+                        the code stores its detailed data under movieDetailsArr["tt12345"]. */
                         movieListHtml += `
                         <div class="movie-card">
                             <img class="movie-poster" src="${movie.Poster !== 'N/A' ? movie.Poster : 'images/no_image_placeholder.png'}"">
@@ -48,15 +48,14 @@ searchBtn.addEventListener("click", (e) => {
                             </section>
                         </div>
                         `;
-
                         moviesContainer.innerHTML = movieListHtml;                        
                     })                                            
             })
         })
 })
 
-// - take one movie by ID listening for the "add icon" click
-// - store it into local Storage
+/*  - take one movie by ID listening for the "add icon" click
+    - store it into local Storage */
 moviesContainer.addEventListener("click", (e) => {
     if (e.target.dataset.add) {
         const movieID = e.target.dataset.add;
@@ -67,12 +66,11 @@ moviesContainer.addEventListener("click", (e) => {
 
 function handleAddClick(movieID){
     const movie =movieDetailsArr[movieID]
-    /* console.log(movie) */
     if (movie) {
-        // Add the new movie to the existing watchlist
+        /*  Add the new movie to the existing watchlist */
         myWatchlist.push(movie);
-        // Save the updated watchlist back to local storage
+        /* Save the updated watchlist back to local storage */
         localStorage.setItem(storageKey, JSON.stringify(myWatchlist));
-        /* console.log(myWatchlist); */ // Log the updated watchlist
     }
 }
+
